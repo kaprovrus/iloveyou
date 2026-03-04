@@ -1,238 +1,318 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>С 8 Марта ❤️</title>
-
-<style>
-body{
-  margin:0;
-  height:100vh;
-  background:linear-gradient(135deg,#ff9a9e,#fecfef);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-  font-family:Arial, sans-serif;
-}
-
-.scene{
-  position:relative;
-  width:320px;
-  height:220px;
-  text-align:center;
-}
-
-.envelope{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:#fff;
-  border-radius:12px;
-  cursor:pointer;
-  box-shadow:0 15px 40px rgba(0,0,0,0.2);
-  animation:shake 1.5s infinite;
-  z-index:10;
-}
-
-@keyframes shake{
-  0%,100%{transform:rotate(0)}
-  25%{transform:rotate(2deg)}
-  75%{transform:rotate(-2deg)}
-}
-
-.flap{
-  position:absolute;
-  top:0;
-  width:100%;
-  height:100%;
-  background:#ff4d6d;
-  clip-path:polygon(0 0,50% 55%,100% 0);
-  transform-origin:top;
-  transition:transform 1s ease;
-  border-radius:12px 12px 0 0;
-  z-index:20;
-}
-
-.open .flap{
-  transform:rotateX(180deg);
-}
-
-.message{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  font-size:22px;
-  font-weight:bold;
-  color:#ff4d6d;
-  opacity:0;
-  transition:opacity 1s ease 0.5s;
-  z-index:5;
-}
-
-.open .message{
-  opacity:1;
-}
-
-.photos{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  display:flex;
-  gap:5px;
-  opacity:0;
-  transition:all 1.2s ease;
-  z-index:1;
-  pointer-events:none;
-}
-
-.photos img{
-  width:70px;
-  height:90px;
-  object-fit:cover;
-  border-radius:12px;
-  box-shadow:0 10px 20px rgba(0,0,0,0.25);
-  opacity:0;
-  transform:translateY(0) scale(0.5);
-  transition:all 1.2s ease;
-}
-
-/* Задержки для каждого фото */
-.photos img:nth-child(1){ transition-delay:0.1s; }
-.photos img:nth-child(2){ transition-delay:0.2s; }
-.photos img:nth-child(3){ transition-delay:0.3s; }
-.photos img:nth-child(4){ transition-delay:0.4s; }
-.photos img:nth-child(5){ transition-delay:0.5s; }
-.photos img:nth-child(6){ transition-delay:0.6s; }
-.photos img:nth-child(7){ transition-delay:0.7s; }
-.photos img:nth-child(8){ transition-delay:0.8s; }
-
-.open .photos{
-  opacity:1;
-  transform:translate(-50%, -180px);
-}
-
-.open .photos img{
-  opacity:1;
-  transform:translateY(100px) rotate(var(--rotate)) scale(1);
-}
-
-/* Разные углы поворота для фото */
-.open .photos img:nth-child(1){ --rotate: -35deg; }
-.open .photos img:nth-child(2){ --rotate: -25deg; }
-.open .photos img:nth-child(3){ --rotate: -15deg; }
-.open .photos img:nth-child(4){ --rotate: -5deg; }
-.open .photos img:nth-child(5){ --rotate: 5deg; }
-.open .photos img:nth-child(6){ --rotate: 15deg; }
-.open .photos img:nth-child(7){ --rotate: 25deg; }
-.open .photos img:nth-child(8){ --rotate: 35deg; }
-
-.heart{
-  position:fixed;
-  top:-20px;
-  font-size:22px;
-  animation:fall linear forwards;
-  pointer-events:none;
-  z-index:100;
-}
-
-@keyframes fall{
-  0%{transform:translateY(-10px) rotate(0deg); opacity:1;}
-  100%{transform:translateY(110vh) rotate(360deg); opacity:0.9;}
-}
-
-/* Заглушки для фото если файлы не найдены */
-.photos img {
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-  border: 2px solid white;
-  display: inline-block;
-  position: relative;
-}
-
-.photos img[src=""], 
-.photos img:not([src]) {
-  content: "";
-}
-
-.photos img::after {
-  display: none;
-}
-</style>
-</head>
-
-<body>
-
-<!-- 🎵 Музыка -->
-<audio id="bgMusic" src="music.mp3" loop></audio>
-
-<div class="scene">
-  <div class="envelope" id="envelope">
-      <div class="flap"></div>
-      <div class="message">С 8 Марта, любимая! ❤️</div>
-  </div>
-
-  <div class="photos">
-      <!-- Временные цветные заглушки, пока нет реальных фото -->
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23ff9a9e'/%3E%3Ctext x='15' y='55' font-size='30' fill='white'%3E🌸%3C/text%3E%3C/svg%3E">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23fecfef'/%3E%3Ctext x='15' y='55' font-size='30' fill='%23ff4d6d'%3E❤️%3C/text%3E%3C/svg%3E">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23ffb6c1'/%3E%3Ctext x='15' y='55' font-size='30' fill='white'%3E🌹%3C/text%3E%3C/svg%3E">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23ffc0cb'/%3E%3Ctext x='15' y='55' font-size='30' fill='%23ff4d6d'%3E🌷%3C/text%3E%3C/svg%3E">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23ffe4e1'/%3E%3Ctext x='15' y='55' font-size='30' fill='%23ff4d6d'%3E🌺%3C/text%3E%3C/svg%3E">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23fff0f5'/%3E%3Ctext x='15' y='55' font-size='30' fill='%23ff4d6d'%3E🌼%3C/text%3E%3C/svg%3E">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23fadadd'/%3E%3Ctext x='15' y='55' font-size='30' fill='white'%3E🌸%3C/text%3E%3C/svg%3E">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23ffe4e1'/%3E%3Ctext x='15' y='55' font-size='30' fill='%23ff4d6d'%3E❤️%3C/text%3E%3C/svg%3E">
-  </div>
-</div>
-
-<script>
-const envelope = document.getElementById("envelope");
-const music = document.getElementById("bgMusic");
-const photos = document.querySelector('.photos');
-
-let confettiStarted = false;
-
-envelope.addEventListener("click", ()=>{
-  if(!envelope.classList.contains("open")){
-    envelope.classList.add("open");
-
-    // 🎵 Запуск музыки
-    music.play().catch(()=>{
-      console.log("Музыка не загружена или заблокирована браузером");
-    });
-
-    // ❤️ Запуск бесконечных сердечек
-    if(!confettiStarted){
-      setInterval(createHeart, 150);
-      confettiStarted = true;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Поздравительная открытка</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('background.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      touch-action: manipulation;
     }
 
-    // Добавляем класс для анимации фото
-    photos.classList.add('show');
-  }
-});
+    .envelope {
+      width: 250px;
+      height: 180px;
+      background: url('envelope.png') no-repeat center center;
+      background-size: contain;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      z-index: 20;
+      animation: shake 2s infinite;
+      transition: opacity 0.5s ease;
+    }
 
-function createHeart(){
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  
-  // Разные символы для разнообразия
-  const symbols = ["❤️","🧡","💛","💚","💙","💜","🌸","🌺","🌷","🌹"];
-  heart.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
-  
-  heart.style.left = Math.random()*100 + "vw";
-  heart.style.animationDuration = (Math.random()*3+2) + "s";
-  heart.style.fontSize = (Math.random()*15+15) + "px";
-  document.body.appendChild(heart);
+    @keyframes shake {
+      0%,100% { transform: translate(-50%,-50%) rotate(0deg); }
+      25% { transform: translate(-50%,-50%) rotate(3deg); }
+      50% { transform: translate(-50%,-50%) rotate(-3deg); }
+      75% { transform: translate(-50%,-50%) rotate(3deg); }
+    }
 
-  setTimeout(()=>heart.remove(), 5000);
-}
+    .photo {
+      position: absolute;
+      width: 100px;
+      height: 120px;
+      background-size: cover;
+      background-position: center;
+      border: 3px solid white;
+      border-radius: 5px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      opacity: 0;
+      transform: scale(0.5);
+      z-index: 10;
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
 
-// Для проверки в консоли
-console.log("Скрипт загружен. Нажми на конверт!");
-</script>
+    .photo.final {
+      width: 120px;
+      height: 150px;
+      position: relative;
+      transform: none;
+      top: auto;
+      left: auto;
+      margin: 5px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
 
+    .photo.final:hover {
+      transform: scale(1.05);
+    }
+
+    .heart {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: url('heart.png') no-repeat center center;
+      background-size: contain;
+      opacity: 0;
+      z-index: 5;
+    }
+
+    .message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255,255,255,0.95);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      opacity: 0;
+      max-width: 80%;
+      text-align: center;
+      font-size: 16px;
+      line-height: 1.5;
+      transition: opacity 1s ease;
+      z-index: 15;
+    }
+
+    .message.show { opacity: 1; }
+
+    .final-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      z-index: 25;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 2s ease;
+    }
+
+    .final-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .final-overlay h1 {
+      font-size: 28px;
+      color: #e91e63;
+      text-align: center;
+      animation: zoomIn 2s ease;
+      margin-bottom: 30px;
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      max-width: 90%;
+      margin: 0 auto;
+    }
+
+    .photo-enlarged {
+      position: fixed;
+      max-width: 90%;
+      max-height: 90%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 40;
+      border: 5px solid white;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .photo-enlarged.show { opacity: 1; }
+
+    @keyframes zoomIn {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fly {
+      0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 1; }
+    }
+
+    @keyframes heart-fall {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    .music-control {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      background: rgba(255,255,255,0.85);
+      color: #333;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 20;
+      display: none;
+      border: none;
+    }
+
+    .music-control.show { display: block; }
+  </style>
+</head>
+<body>
+
+  <div class="envelope" id="envelope"></div>
+  <div id="photosContainer"></div>
+  <div id="effectsContainer"></div>
+
+  <div class="message" id="message">
+    <h2>Дорогая тётя Зауре!</h2>
+    <p>Поздравляю Вас с Днём Рождения! Желаю крепкого здоровья, долгих и счастливых лет, наполненных радостью и благополучием. Пусть каждый новый день приносит только счастье, а впереди будет много ярких и тёплых моментов. Пусть сбудутся все Ваши мечты, а жизнь будет полна любви и гармонии!</p>
+  </div>
+
+  <div class="final-overlay" id="finalOverlay">
+    <h1>С любовью и самыми тёплыми пожеланиями!</h1>
+    <div class="photos-grid" id="photosGrid"></div>
+  </div>
+
+  <div id="enlargedPhotoContainer"></div>
+  <button class="music-control" id="musicControl">Выключить музыку</button>
+  <audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const envelope = document.getElementById('envelope');
+      const photosContainer = document.getElementById('photosContainer');
+      const effectsContainer = document.getElementById('effectsContainer');
+      const message = document.getElementById('message');
+      const music = document.getElementById('bgMusic');
+      const musicControl = document.getElementById('musicControl');
+      const finalOverlay = document.getElementById('finalOverlay');
+      const photosGrid = document.getElementById('photosGrid');
+      const enlargedPhotoContainer = document.getElementById('enlargedPhotoContainer');
+
+      const photoCount = 8;
+      const allPhotos = [];
+
+      envelope.addEventListener('click', function() {
+        music.play().catch(() => {}); // проигрываем музыку
+        envelope.style.opacity = '0';
+        envelope.style.pointerEvents = 'none';
+        message.classList.add('show');
+        musicControl.classList.add('show');
+        music.volume = 0.5;
+
+        // Появление фото
+        for (let i = 1; i <= photoCount; i++) {
+          const photo = document.createElement('div');
+          photo.className = 'photo';
+          photo.style.backgroundImage = `url('photo${i}.jpg')`;
+          photo.dataset.src = `photo${i}.jpg`;
+
+          const angle = i * (2 * Math.PI / photoCount);
+          const distance = 200;
+          photo.style.setProperty('--tx', `${Math.cos(angle)*distance}px`);
+          photo.style.setProperty('--ty', `${Math.sin(angle)*distance}px`);
+          photo.style.left = '50%';
+          photo.style.top = '50%';
+          photosContainer.appendChild(photo);
+          allPhotos.push(photo);
+
+          setTimeout(() => {
+            photo.style.opacity = '1';
+            photo.style.animation = 'fly 1s ease-out forwards';
+          }, i * 150);
+        }
+
+        // Сердечки вместо конфетти
+        setTimeout(() => createHearts(50), 800);
+
+        // Финальный экран через 3 сек
+        setTimeout(() => prepareFinalView(), 3000);
+      });
+
+      function prepareFinalView() {
+        message.classList.remove('show');
+        finalOverlay.classList.add('show');
+
+        allPhotos.forEach(photo => {
+          const photoClone = photo.cloneNode();
+          photoClone.className = 'photo final';
+          photoClone.style.opacity = '1';
+          photoClone.addEventListener('click', () => showEnlargedPhoto(photo.dataset.src));
+          photosGrid.appendChild(photoClone);
+        });
+
+        createHearts(30);
+      }
+
+      function showEnlargedPhoto(src) {
+        enlargedPhotoContainer.innerHTML = '';
+        const enlargedPhoto = document.createElement('img');
+        enlargedPhoto.className = 'photo-enlarged';
+        enlargedPhoto.src = src;
+        enlargedPhotoContainer.appendChild(enlargedPhoto);
+        setTimeout(() => enlargedPhoto.classList.add('show'), 10);
+        enlargedPhoto.addEventListener('click', () => {
+          enlargedPhoto.classList.remove('show');
+          setTimeout(() => enlargedPhoto.remove(), 500);
+        });
+      }
+
+      function createHearts(count) {
+        for (let i = 0; i < count; i++) {
+          setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = `${Math.random()*100}vw`;
+            heart.style.animation = `heart-fall ${3+Math.random()*2}s linear forwards`;
+            effectsContainer.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+          }, i*100);
+        }
+      }
+
+      musicControl.addEventListener('click', function() {
+        if (music.paused) {
+          music.play();
+          musicControl.textContent = 'Выключить музыку';
+        } else {
+          music.pause();
+          musicControl.textContent = 'Включить музыку';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
