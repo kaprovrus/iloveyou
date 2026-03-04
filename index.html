@@ -3,265 +3,376 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<title>Поздравительная открытка</title>
+<title>✨ Волшебная открытка ✨</title>
 <style>
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
-  margin: 0; padding: 0;
-  background: url('background.jpg') no-repeat center center fixed;
-  background-size: cover;
+  margin:0; padding:0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
   height: 100vh; overflow: hidden;
-  touch-action: manipulation;
-  position: fixed;
-  width: 100%;
+  position: fixed; width:100%;
 }
 
-/* Конверт - адаптивный размер */
+/* Анимированные частицы фона */
+.particle {
+  position: absolute;
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.1); }
+}
+
+/* Конверт - на заднем плане */
 .envelope {
-  width: min(250px, 70vw);
-  height: min(180px, 50vw);
+  width: min(280px, 75vw);
+  height: min(200px, 55vw);
   background: url('envelope.png') no-repeat center center;
   background-size: contain;
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  z-index: 20;
-  animation: shake 2s infinite;
-  transition: opacity 0.5s ease;
+  top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  cursor:pointer;
+  z-index: 5;
+  animation: floatEnvelope 4s ease-in-out infinite;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+  transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-@keyframes shake {
-  0%,100% { transform: translate(-50%,-50%) rotate(0deg); }
-  25% { transform: translate(-50%,-50%) rotate(3deg); }
-  50% { transform: translate(-50%,-50%) rotate(-3deg); }
-  75% { transform: translate(-50%,-50%) rotate(3deg); }
+.envelope:hover {
+  transform: translate(-50%,-50%) scale(1.1);
 }
 
-/* Фотографии при вылете */
+@keyframes floatEnvelope {
+  0%, 100% { transform: translate(-50%,-50%) translateY(0); }
+  50% { transform: translate(-50%,-50%) translateY(-20px); }
+}
+
+/* Фото в полете - ПЕРЕД всем! */
 .photo {
   position: absolute; 
-  width: min(100px, 25vw); 
-  height: min(120px, 30vw);
-  background-size: cover; background-position: center;
-  border: 3px solid white; border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  opacity: 0; transform: scale(0.5);
-  z-index: 10;
-  transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity;
-}
-
-/* Финальные фото в сетке */
-.photo.final {
-  width: 100%; 
-  height: auto; 
-  aspect-ratio: 4/5;
-  position: relative; 
-  transform: none;
-  margin: 0;
-  transition: transform 0.3s ease; 
+  width: min(120px, 28vw); 
+  height: min(150px, 35vw);
+  background-size: cover; 
+  background-position: center;
+  border: 4px solid white;
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+  opacity:0; 
+  transform: scale(0.5) rotate(-10deg);
+  z-index: 30;
+  transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform,opacity;
   cursor: pointer;
+  overflow: hidden;
 }
 
+.photo::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+  pointer-events: none;
+}
+
+/* В финале фото ПОВЕРХ оверлея с прозрачностью 0.25 (75% прозрачности) */
+.final-overlay.show ~ .photo {
+  z-index: 45 !important;
+  opacity: 0.25 !important;
+  filter: brightness(1);
+  transition: all 1.5s ease;
+}
+
+/* Сердечки - на среднем уровне */
 .heart {
-  position: absolute; 
-  width: min(20px, 5vw); 
-  height: min(20px, 5vw);
+  position:absolute;
+  width:min(25px, 6vw); 
+  height:min(25px, 6vw);
   background: url('heart.png') no-repeat center center;
   background-size: contain;
-  opacity: 0; 
-  z-index: 5;
-  pointer-events: none;
+  opacity:0; 
+  z-index: 20; 
+  pointer-events:none;
+  filter: drop-shadow(0 0 10px rgba(255,107,107,0.5));
 }
 
-/* Сообщение - адаптивное */
+/* Сообщение - ПОД фото */
 .message {
-  position: absolute; 
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(255,255,255,0.97);
-  padding: clamp(16px, 5vw, 24px); 
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  opacity: 0; 
-  width: min(400px, 85%);
-  max-width: 90%; 
-  text-align: center;
-  font-size: clamp(14px, 4vw, 18px); 
-  line-height: 1.5;
-  transition: opacity 1s ease; 
+  position:absolute; 
+  top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(10px);
+  padding: clamp(20px,6vw,30px);
+  border-radius:30px; 
+  box-shadow:0 20px 50px rgba(0,0,0,0.3);
+  opacity:0; 
+  width:min(450px,90%); 
+  max-width:90%;
+  text-align:center; 
+  font-size:clamp(16px,4.5vw,20px);
+  line-height:1.6; 
+  transition: opacity 1.5s ease;
   z-index: 15;
-  pointer-events: none;
-  max-height: 70vh;
-  overflow-y: auto;
+  pointer-events:none;
+  max-height:80vh; 
+  overflow-y:auto; 
   -webkit-overflow-scrolling: touch;
+  border: 2px solid rgba(255,107,107,0.3);
 }
 
 .message.show { 
-  opacity: 1; 
-  pointer-events: auto;
+  opacity:1; 
+  pointer-events:auto;
+  animation: messageAppear 1.5s ease;
 }
 
-.message h2 {
-  font-size: clamp(20px, 6vw, 28px);
-  color: #e91e63;
-  margin-top: 0;
+@keyframes messageAppear {
+  0% { transform: translate(-50%,-30%) scale(0.8); opacity: 0; }
+  100% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
 }
 
-/* Финальный оверлей */
+.message h2 { 
+  font-size: clamp(24px,7vw,32px); 
+  color:#ff6b6b; 
+  margin-top:0;
+  text-shadow: 2px 2px 4px rgba(255,107,107,0.2);
+}
+
+.message p:last-child {
+  font-size:1.3em;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* ФИНАЛЬНЫЙ ОВЕРЛЕЙ - УМЕНЬШЕННЫЙ ТЕКСТ */
 .final-overlay {
   position: fixed; 
-  top: 0; left: 0; 
-  width: 100%; height: 100%;
-  background: rgba(255,250,250,0.98); 
+  top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  background: rgba(255, 245, 245, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius:40px;
+  box-shadow:0 20px 40px rgba(255,107,107,0.2);
   z-index: 25;
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center; 
-  align-items: center;
-  opacity: 0; 
-  pointer-events: none; 
-  transition: opacity 1s ease;
-  padding: 16px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  display:flex; 
+  flex-direction:column;
+  justify-content:center; 
+  align-items:center;
+  opacity:0; 
+  pointer-events:none;
+  padding:30px 20px;
+  max-width:90%; 
+  width:500px; 
+  border: 2px solid rgba(255,255,255,0.5);
 }
 
 .final-overlay.show { 
-  opacity: 1; 
-  pointer-events: auto;
+  opacity:1; 
+  pointer-events:auto;
+  animation: overlayAppear 2s ease;
+}
+
+@keyframes overlayAppear {
+  0% { transform: translate(-50%,-30%) scale(0.8); opacity: 0; }
+  100% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
 }
 
 .final-overlay h1 {
-  font-size: clamp(20px, 6vw, 28px); 
-  color: #e91e63; 
-  text-align: center;
-  animation: zoomIn 1.5s ease; 
-  margin: 20px 0;
-  padding: 0 10px;
-  line-height: 1.3;
+  font-size: clamp(24px,5vw,28px); /* УМЕНЬШИЛ */
+  color:#ff4d4d; 
+  text-align:center;
+  animation: zoomIn 2s ease;
+  margin:0 0 10px 0; 
+  line-height:1.3; 
+  text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+  font-weight:800;
 }
 
-/* Сетка фото - адаптивная */
-.photos-grid { 
-  display: grid; 
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 12px; 
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto 20px;
-  padding: 0 10px;
+.final-overlay p {
+  font-size: clamp(16px,4vw,20px); /* УМЕНЬШИЛ */
+  color:#333;
+  text-align:center;
+  line-height:1.4;
+  margin:5px 0;
+  animation: fadeIn 2.5s ease;
+  font-weight:500;
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
 }
 
-@media (min-width: 480px) {
-  .photos-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+.final-overlay .heart-big {
+  font-size: 40px; /* УМЕНЬШИЛ */
+  animation: heartbeat 2s ease-in-out infinite;
+  margin: 10px 0;
+  filter: drop-shadow(0 0 10px rgba(255,77,77,0.5));
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@keyframes zoomIn { 
+  0%{transform:scale(0.5);opacity:0;}
+  100%{transform:scale(1);opacity:1;} 
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fly { 
+  0%{transform:translate(-50%,-50%) scale(0.5) rotate(-20deg);opacity:0;}
+  100%{transform:translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1) rotate(0deg);opacity:1;} 
+}
+
+@keyframes heart-fall {
+  0%{transform:translateY(-20vh) rotate(0deg) scale(1);opacity:0.8;}
+  100%{transform:translateY(100vh) rotate(720deg) scale(0);opacity:0;}
 }
 
 /* Увеличенное фото */
 .photo-enlarged {
-  position: fixed; 
-  max-width: 90%; 
-  max-height: 80vh;
-  top: 50%; left: 50%; 
-  transform: translate(-50%, -50%);
-  z-index: 40; 
-  border: 4px solid white; 
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-  opacity: 0; 
-  transition: opacity 0.3s ease;
-  object-fit: contain;
+  position:fixed; 
+  max-width:90%; 
+  max-height:85vh;
+  top:50%; left:50%; 
+  transform:translate(-50%,-50%) scale(0.9);
+  z-index: 100;
+  border:5px solid white; 
+  border-radius:20px;
+  box-shadow:0 25px 60px rgba(0,0,0,0.5);
+  opacity:0; 
+  transition:all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  object-fit:contain;
+  cursor: pointer;
 }
 
-.photo-enlarged.show { opacity: 1; }
+.photo-enlarged.show{ 
+  opacity:1; 
+  transform:translate(-50%,-50%) scale(1);
+}
 
-/* Кнопка управления музыкой */
-.music-control {
-  position: fixed; 
-  bottom: 20px; 
-  right: 20px;
-  background: rgba(255,255,255,0.95); 
-  color: #e91e63; 
-  padding: 12px 20px;
-  border-radius: 40px; 
-  cursor: pointer; 
-  font-size: 16px;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-  z-index: 30; 
-  display: none; 
-  border: none;
+.photo-enlarged-backdrop { 
+  position:fixed; 
+  top:0; left:0; 
+  width:100%; 
+  height:100%; 
+  background:rgba(0,0,0,0.85);
   backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  letter-spacing: 0.5px;
+  z-index: 90; 
+  opacity:0; 
+  transition:opacity 0.5s ease; 
+  pointer-events:none;
 }
 
-.music-control.show { display: block; }
-
-/* Анимации */
-@keyframes zoomIn { 
-  0% { transform: scale(0.5); opacity: 0; } 
-  100% { transform: scale(1); opacity:1; } 
+.photo-enlarged-backdrop.show{ 
+  opacity:1; 
+  pointer-events:auto; 
 }
 
-@keyframes fly { 
-  0% { transform: translate(0,0) scale(0.5); opacity:0; } 
-  100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity:1; } 
+/* Музыкальный контроллер */
+.music-control { 
+  position:fixed; 
+  bottom:20px; 
+  right:20px;
+  background:linear-gradient(135deg, #ff6b6b, #ee5253); 
+  color:white;
+  padding:15px 25px; 
+  border-radius:50px; 
+  cursor:pointer;
+  font-size:16px; 
+  font-weight:600; 
+  box-shadow:0 5px 20px rgba(255,107,107,0.4);
+  z-index: 50; 
+  display:none; 
+  border:none; 
+  backdrop-filter:blur(10px); 
+  -webkit-backdrop-filter:blur(10px);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
 
-@keyframes heart-fall { 
-  0% { transform: translateY(-20vh) rotate(0deg); opacity:0.8; } 
-  100% { transform: translateY(100vh) rotate(360deg); opacity:0; } 
+.music-control.show{ 
+  display:block;
+  animation: slideIn 1s ease;
 }
 
-/* Затемнение фона при увеличении фото */
-.photo-enlarged-backdrop {
+@keyframes slideIn {
+  from { transform: translateX(100px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.music-control:hover {
+  transform: scale(1.05);
+  box-shadow:0 8px 25px rgba(255,107,107,0.6);
+}
+
+/* Счетчик фото */
+.photo-count {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.7);
-  z-index: 35;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
+  top: 20px;
+  right: 20px;
+  background: rgba(255,255,255,0.9);
+  padding: 10px 20px;
+  border-radius: 30px;
+  color: #ff6b6b;
+  font-weight: bold;
+  z-index: 60; 
+  display: none;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.photo-enlarged-backdrop.show {
-  opacity: 1;
-  pointer-events: auto;
+.photo-count.show {
+  display: block;
+  animation: slideIn 1s ease;
 }
 </style>
 </head>
 <body>
 
 <div class="envelope" id="envelope"></div>
+<div class="photo-count" id="photoCount">📸 0/8</div>
 <div id="photosContainer"></div>
 <div id="effectsContainer"></div>
 
 <div class="message" id="message">
-  <h2>Моя любимая!</h2>
-  <p>Хочу, чтобы каждый твой день был наполнен радостью, теплом и улыбками. Ты делаешь мою жизнь ярче, а каждый момент рядом с тобой — особенным. Пусть этот день подарит тебе море цветов, нежности и самых приятных сюрпризов. Я ценю и люблю тебя за твою доброту, мудрость и ту магию, которую ты приносишь в мой мир.</p>
-  <p style="font-size: 1.2em; margin-bottom: 0;">❤️ С праздником, моя единственная! ❤️</p>
+  <h2>💝 Моя любимая! 💝</h2>
+  <p>Хочу, чтобы каждый твой день был наполнен радостью, теплом и улыбками. Ты делаешь мою жизнь ярче.</p>
+  <p>✨ Я ценю и люблю тебя. ✨</p>
+  
+  
 </div>
 
+<!-- ФИНАЛЬНЫЙ ОВЕРЛЕЙ С УМЕНЬШЕННЫМ ТЕКСТОМ -->
 <div class="final-overlay" id="finalOverlay">
-  <h1>С любовью и самыми тёплыми пожеланиями!</h1>
-  <div class="photos-grid" id="photosGrid"></div>
+  <h1>💖 С любовью!</h1>
+  <div class="heart-big">❤️</div>
+  <p>Ты самое дорогое</p>
+  <p>Спасибо за счастье</p>
+  <p>✨ С праздником! ✨</p>
 </div>
 
 <div id="enlargedPhotoContainer"></div>
 <div id="enlargedBackdrop" class="photo-enlarged-backdrop"></div>
 
-<button class="music-control" id="musicControl">🔊 Выключить музыку</button>
-<audio id="bgMusic" loop preload="auto"><source src="music.mp3" type="audio/mp3"></audio>
+<button class="music-control" id="musicControl">🎵 Выключить музыку</button>
+<audio id="bgMusic" loop preload="auto">
+  <source src="music.mp3" type="audio/mp3">
+</audio>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -272,101 +383,107 @@ document.addEventListener('DOMContentLoaded', function() {
   const music = document.getElementById('bgMusic');
   const musicControl = document.getElementById('musicControl');
   const finalOverlay = document.getElementById('finalOverlay');
-  const photosGrid = document.getElementById('photosGrid');
   const enlargedPhotoContainer = document.getElementById('enlargedPhotoContainer');
   const enlargedBackdrop = document.getElementById('enlargedBackdrop');
-
   const photoCount = 8;
   const allPhotos = [];
 
-  // Предотвращаем скролл на body при открытом увеличенном фото
-  function preventBodyScroll(prevent) {
-    document.body.style.overflow = prevent ? 'hidden' : '';
+  // Создание фоновых частиц
+  function createParticles() {
+    for (let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.width = `${Math.random() * 10 + 5}px`;
+      particle.style.height = particle.style.width;
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      particle.style.animationDelay = `${Math.random() * 3}s`;
+      particle.style.background = `rgba(255, 255, 255, ${Math.random() * 0.3})`;
+      document.body.appendChild(particle);
+    }
+  }
+  createParticles();
+
+  function preventBodyScroll(prevent){ 
+    document.body.style.overflow = prevent ? 'hidden':''; 
   }
 
-  envelope.addEventListener('click', function(e) {
+  envelope.addEventListener('click', function(e){
     e.stopPropagation();
-    
-    // Пытаемся запустить музыку (для мобильных требуется действие пользователя)
     music.volume = 0.5;
-    let playPromise = music.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        console.log('Автовоспроизведение заблокировано, но кнопка появится');
-      });
-    }
-
+    music.play().catch(() => {
+      console.log('Music autoplay failed');
+    });
+    
     envelope.style.opacity = '0';
     envelope.style.pointerEvents = 'none';
     message.classList.add('show');
     musicControl.classList.add('show');
-
-    // Очищаем предыдущие фото
-    photosContainer.innerHTML = '';
+    photosContainer.innerHTML = ''; 
     allPhotos.length = 0;
 
-    // Анимация вылета фото
+    // Показываем счетчик
+    const photoCounter = document.getElementById('photoCount');
+    photoCounter.classList.add('show');
+    updatePhotoCounter();
+
     let delay = 0;
-    for (let i = 1; i <= photoCount; i++) {
+    for(let i = 1; i <= photoCount; i++){
       const photo = document.createElement('div');
       photo.className = 'photo';
       photo.style.backgroundImage = `url('photo${i}.jpg')`;
       photo.dataset.src = `photo${i}.jpg`;
-
-      // Распределяем по кругу
-      const angle = (i - 1) * (2 * Math.PI / photoCount);
-      const distance = Math.min(200, window.innerWidth * 0.25); // Адаптивное расстояние
-      
+      const angle = (i-1) * (2 * Math.PI / photoCount);
+      const distance = Math.min(250, window.innerWidth * 0.3);
       photo.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
       photo.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
       photo.style.left = '50%'; 
       photo.style.top = '50%';
       
-      photosContainer.appendChild(photo);
-      allPhotos.push(photo);
-
-      setTimeout(() => {
-        photo.style.opacity = '1';
-        photo.style.animation = 'fly 1.2s ease-out forwards';
-      }, delay);
-
-      delay += 300; // Более быстрый интервал для мобильных
-    }
-
-    setTimeout(() => createHearts(30), 800);
-    setTimeout(() => prepareFinalView(), delay + 1500);
-  });
-
-  function prepareFinalView() {
-    message.classList.remove('show');
-    finalOverlay.classList.add('show');
-    
-    // Очищаем и заполняем сетку
-    photosGrid.innerHTML = '';
-    
-    allPhotos.forEach(photo => {
-      const clone = document.createElement('div');
-      clone.className = 'photo final';
-      clone.style.backgroundImage = photo.style.backgroundImage;
-      clone.dataset.src = photo.dataset.src;
-      
-      clone.addEventListener('click', (e) => {
+      // Добавляем обработчик клика для фото
+      photo.addEventListener('click', (e) => {
         e.stopPropagation();
         showEnlargedPhoto(photo.dataset.src);
       });
       
-      photosGrid.appendChild(clone);
-    });
+      photosContainer.appendChild(photo);
+      allPhotos.push(photo);
+      
+      setTimeout(() => { 
+        photo.style.opacity = '1'; 
+        photo.style.animation = 'fly 2s ease-out forwards';
+      }, delay);
+      
+      delay += 400;
+    }
 
-    createHearts(20);
+    setTimeout(() => createHearts(40), 1500);
+    setTimeout(() => prepareFinalView(), delay + 3000);
+  });
+
+  function updatePhotoCounter() {
+    const counter = document.getElementById('photoCount');
+    const visiblePhotos = Array.from(allPhotos).filter(p => p.style.opacity === '1').length;
+    counter.textContent = `📸 ${visiblePhotos}/${photoCount}`;
+    
+    if (visiblePhotos < photoCount) {
+      setTimeout(updatePhotoCounter, 200);
+    }
   }
 
-  function showEnlargedPhoto(src) {
-    // Создаем затемнение
+  function prepareFinalView(){
+    message.classList.remove('show');
+    finalOverlay.classList.add('show');
+    document.getElementById('photoCount').classList.remove('show');
+    
+    // Прозрачность фото уже задана в CSS
+    createHearts(60);
+  }
+
+  function showEnlargedPhoto(src){
+    enlargedPhotoContainer.innerHTML = '';
     enlargedBackdrop.classList.add('show');
     
-    // Создаем увеличенное фото
-    enlargedPhotoContainer.innerHTML = '';
     const enlargedPhoto = document.createElement('img');
     enlargedPhoto.className = 'photo-enlarged';
     enlargedPhoto.src = src;
@@ -374,77 +491,72 @@ document.addEventListener('DOMContentLoaded', function() {
     
     enlargedPhotoContainer.appendChild(enlargedPhoto);
     
-    // Небольшая задержка для анимации
-    setTimeout(() => {
-      enlargedPhoto.classList.add('show');
-    }, 10);
+    setTimeout(() => { 
+      enlargedPhoto.classList.add('show'); 
+    }, 50);
     
     preventBodyScroll(true);
 
-    // Функция закрытия
-    function closeEnlarged() {
+    function closeEnlarged(){
       enlargedPhoto.classList.remove('show');
       enlargedBackdrop.classList.remove('show');
       preventBodyScroll(false);
-      setTimeout(() => {
-        enlargedPhoto.remove();
-      }, 300);
+      setTimeout(() => { 
+        enlargedPhoto.remove(); 
+      }, 600);
     }
 
-    // Закрытие по клику на фото или фон
     enlargedPhoto.addEventListener('click', closeEnlarged);
     enlargedBackdrop.addEventListener('click', closeEnlarged);
-    
-    // Закрытие по свайпу вниз (для мобильных)
+
     let touchStartY = 0;
-    enlargedPhoto.addEventListener('touchstart', (e) => {
-      touchStartY = e.touches[0].clientY;
-    }, { passive: true });
+    enlargedPhoto.addEventListener('touchstart', (e) => { 
+      touchStartY = e.touches[0].clientY; 
+    }, {passive: true});
     
     enlargedPhoto.addEventListener('touchend', (e) => {
       const touchEndY = e.changedTouches[0].clientY;
-      if (Math.abs(touchEndY - touchStartY) > 50) {
+      if(Math.abs(touchEndY - touchStartY) > 50) {
         closeEnlarged();
       }
     });
   }
 
-  function createHearts(count) {
-    for (let i = 0; i < count; i++) {
+  function createHearts(count){
+    for(let i = 0; i < count; i++){
       setTimeout(() => {
         const heart = document.createElement('div');
         heart.className = 'heart';
         heart.style.left = `${Math.random() * 100}%`;
         heart.style.top = '-10%';
-        heart.style.animation = `heart-fall ${2 + Math.random() * 3}s linear forwards`;
-        heart.style.opacity = '1';
+        heart.style.animation = `heart-fall ${3 + Math.random() * 5}s linear forwards`;
+        heart.style.opacity = '0.8';
+        heart.style.transform = `scale(${0.5 + Math.random() * 1.5})`;
         effectsContainer.appendChild(heart);
-        setTimeout(() => heart.remove(), 5000);
+        setTimeout(() => heart.remove(), 8000);
       }, i * 150);
     }
   }
 
-  musicControl.addEventListener('click', function() {
-    if (music.paused) { 
-      music.play().catch(e => console.log('Playback failed:', e));
-      musicControl.textContent = '🔇 Выключить музыку';
+  musicControl.addEventListener('click', function(){
+    if(music.paused){ 
+      music.play().catch(() => {}); 
+      musicControl.innerHTML = '🎵 Выключить музыку'; 
     } else { 
       music.pause(); 
-      musicControl.textContent = '🔊 Включить музыку';
+      musicControl.innerHTML = '🎵 Включить музыку'; 
     }
   });
 
-  // Адаптация под изменения ориентации экрана
-  window.addEventListener('resize', () => {
-    // Можно пересчитать позиции, но для простоты оставим как есть
-  });
-  
-  // Убираем возможные проблемы с автофокусом на мобильных
   document.body.addEventListener('touchmove', (e) => {
-    if (enlargedBackdrop.classList.contains('show')) {
+    if(enlargedBackdrop.classList.contains('show')) {
       e.preventDefault();
     }
-  }, { passive: false });
+  }, {passive: false});
+
+  window.addEventListener('load', () => {
+    createHearts(15);
+  });
 });
 </script>
 </body>
