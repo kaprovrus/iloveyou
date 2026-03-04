@@ -33,6 +33,7 @@ body{
   cursor:pointer;
   box-shadow:0 15px 40px rgba(0,0,0,0.2);
   animation:shake 1.5s infinite;
+  z-index:10;
 }
 
 @keyframes shake{
@@ -51,6 +52,7 @@ body{
   transform-origin:top;
   transition:transform 1s ease;
   border-radius:12px 12px 0 0;
+  z-index:20;
 }
 
 .open .flap{
@@ -67,6 +69,7 @@ body{
   color:#ff4d6d;
   opacity:0;
   transition:opacity 1s ease 0.5s;
+  z-index:5;
 }
 
 .open .message{
@@ -75,13 +78,15 @@ body{
 
 .photos{
   position:absolute;
-  top:-50px;
+  top:50%;
   left:50%;
-  transform:translateX(-50%);
+  transform:translate(-50%,-50%);
   display:flex;
   gap:10px;
   opacity:0;
   transition:all 1.2s ease;
+  z-index:1;
+  pointer-events:none;
 }
 
 .photos img{
@@ -90,23 +95,39 @@ body{
   object-fit:cover;
   border-radius:12px;
   box-shadow:0 10px 20px rgba(0,0,0,0.25);
-  transform:translateY(80px) rotate(0deg);
+  opacity:0;
+  transform:translateY(0) rotate(0deg) scale(0.5);
   transition:all 1.2s ease;
 }
+
+/* Добавляем разные задержки для каждого фото */
+.photos img:nth-child(1){ transition-delay:0.1s; }
+.photos img:nth-child(2){ transition-delay:0.2s; }
+.photos img:nth-child(3){ transition-delay:0.3s; }
+.photos img:nth-child(4){ transition-delay:0.4s; }
+.photos img:nth-child(5){ transition-delay:0.5s; }
+.photos img:nth-child(6){ transition-delay:0.6s; }
+.photos img:nth-child(7){ transition-delay:0.7s; }
+.photos img:nth-child(8){ transition-delay:0.8s; }
 
 .open .photos{
   opacity:1;
   transform:translate(-50%,-160px);
 }
 
-.open .photos img:nth-child(1){ transform:rotate(-25deg);}
-.open .photos img:nth-child(2){ transform:rotate(-15deg);}
-.open .photos img:nth-child(3){ transform:rotate(-5deg);}
-.open .photos img:nth-child(4){ transform:rotate(0deg);}
-.open .photos img:nth-child(5){ transform:rotate(5deg);}
-.open .photos img:nth-child(6){ transform:rotate(15deg);}
-.open .photos img:nth-child(7){ transform:rotate(25deg);}
-.open .photos img:nth-child(8){ transform:rotate(35deg);}
+.open .photos img{
+  opacity:1;
+  transform:translateY(80px) rotate(var(--rotate)) scale(1);
+}
+
+.open .photos img:nth-child(1){ --rotate: -35deg; }
+.open .photos img:nth-child(2){ --rotate: -25deg; }
+.open .photos img:nth-child(3){ --rotate: -15deg; }
+.open .photos img:nth-child(4){ --rotate: -5deg; }
+.open .photos img:nth-child(5){ --rotate: 5deg; }
+.open .photos img:nth-child(6){ --rotate: 15deg; }
+.open .photos img:nth-child(7){ --rotate: 25deg; }
+.open .photos img:nth-child(8){ --rotate: 35deg; }
 
 .heart{
   position:fixed;
@@ -114,11 +135,30 @@ body{
   font-size:22px;
   animation:fall linear forwards;
   pointer-events:none;
+  z-index:100;
 }
 
 @keyframes fall{
   0%{transform:translateY(-10px) rotate(0deg); opacity:1;}
   100%{transform:translateY(110vh) rotate(360deg); opacity:0.9;}
+}
+
+/* Заглушки для фото если нет реальных изображений */
+.photos img:not([src*="."]), 
+.photos img[src=""]{
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff4d6d;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.photos img:not([src*="."])::after, 
+.photos img[src=""]::after{
+  content: "🌸";
 }
 </style>
 </head>
@@ -135,14 +175,14 @@ body{
   </div>
 
   <div class="photos">
-      <img src="photo1.jpg">
-      <img src="photo2.jpg">
-      <img src="photo3.jpg">
-      <img src="photo4.jpg">
-      <img src="photo5.jpg">
-      <img src="photo6.jpg">
-      <img src="photo7.jpg">
-      <img src="photo8.jpg">
+      <img src="photo1.jpg" alt="Фото 1" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23ff9a9e%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ffffff%22%3E🌸%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <img src="photo2.jpg" alt="Фото 2" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23fecfef%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ff4d6d%22%3E❤️%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <img src="photo3.jpg" alt="Фото 3" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23ffb6c1%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ffffff%22%3E🌹%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <img src="photo4.jpg" alt="Фото 4" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23ffc0cb%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ff4d6d%22%3E🌷%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <img src="photo5.jpg" alt="Фото 5" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23ffe4e1%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ff4d6d%22%3E🌺%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <img src="photo6.jpg" alt="Фото 6" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23fff0f5%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ff4d6d%22%3E🌼%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <img src="photo7.jpg" alt="Фото 7" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23fadadd%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ffffff%22%3E🌸%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <img src="photo8.jpg" alt="Фото 8" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23ffe4e1%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ff4d6d%22%3E❤️%3C%2Ftext%3E%3C%2Fsvg%3E'">
   </div>
 </div>
 
@@ -152,17 +192,18 @@ const music = document.getElementById("bgMusic");
 
 let confettiStarted = false;
 
-envelope.addEventListener("click",()=>{
-
+envelope.addEventListener("click", ()=>{
   if(!envelope.classList.contains("open")){
     envelope.classList.add("open");
 
     // 🎵 Запуск музыки
-    music.play().catch(()=>{});
+    music.play().catch(()=>{
+      console.log("Музыка не загружена или заблокирована браузером");
+    });
 
-    // ❤️ Запуск бесконечных конфетти
+    // ❤️ Запуск бесконечных сердечек
     if(!confettiStarted){
-      setInterval(createHeart,150);
+      setInterval(createHeart, 150);
       confettiStarted = true;
     }
   }
@@ -170,14 +211,14 @@ envelope.addEventListener("click",()=>{
 
 function createHeart(){
   const heart = document.createElement("div");
-  heart.className="heart";
-  heart.innerHTML="❤️";
-  heart.style.left=Math.random()*100+"vw";
-  heart.style.animationDuration=(Math.random()*3+3)+"s";
-  heart.style.fontSize=(Math.random()*15+15)+"px";
+  heart.className = "heart";
+  heart.innerHTML = ["❤️","🧡","💛","💚","💙","💜","🌸","🌺"][Math.floor(Math.random()*8)];
+  heart.style.left = Math.random()*100 + "vw";
+  heart.style.animationDuration = (Math.random()*3+2) + "s";
+  heart.style.fontSize = (Math.random()*15+15) + "px";
   document.body.appendChild(heart);
 
-  setTimeout(()=>heart.remove(),6000);
+  setTimeout(()=>heart.remove(), 5000);
 }
 </script>
 
