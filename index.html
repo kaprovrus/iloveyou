@@ -1,200 +1,116 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Поздравительная открытка</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: url('background.jpg') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Arial', sans-serif;
-      height: 100vh;
-      overflow: hidden;
-      touch-action: manipulation;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Поздравительная открытка</title>
+<style>
+body {
+  margin: 0; padding: 0;
+  background: url('background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Arial', sans-serif;
+  height: 100vh; overflow: hidden;
+  touch-action: manipulation;
+}
 
-    .envelope {
-      width: 250px;
-      height: 180px;
-      background: url('envelope.png') no-repeat center center;
-      background-size: contain;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      cursor: pointer;
-      z-index: 20;
-      animation: shake 2s infinite;
-      transition: opacity 0.5s ease;
-    }
+.envelope {
+  width: 250px; height: 180px;
+  background: url('envelope.png') no-repeat center center;
+  background-size: contain;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 20;
+  animation: shake 2s infinite;
+  transition: opacity 0.5s ease;
+}
+@keyframes shake {
+  0%,100% { transform: translate(-50%,-50%) rotate(0deg); }
+  25% { transform: translate(-50%,-50%) rotate(3deg); }
+  50% { transform: translate(-50%,-50%) rotate(-3deg); }
+  75% { transform: translate(-50%,-50%) rotate(3deg); }
+}
 
-    @keyframes shake {
-      0%,100% { transform: translate(-50%,-50%) rotate(0deg); }
-      25% { transform: translate(-50%,-50%) rotate(3deg); }
-      50% { transform: translate(-50%,-50%) rotate(-3deg); }
-      75% { transform: translate(-50%,-50%) rotate(3deg); }
-    }
+.photo {
+  position: absolute; width: 100px; height: 120px;
+  background-size: cover; background-position: center;
+  border: 3px solid white; border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  opacity: 0; transform: scale(0.5);
+  z-index: 10;
+  transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-    .photo {
-      position: absolute;
-      width: 100px;
-      height: 120px;
-      background-size: cover;
-      background-position: center;
-      border: 3px solid white;
-      border-radius: 5px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      opacity: 0;
-      transform: scale(0.5);
-      z-index: 10;
-      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+.photo.final {
+  width: 120px; height: 150px; position: relative; transform: none;
+  margin: 5px; transition: transform 0.3s ease; cursor: pointer;
+}
+.photo.final:hover { transform: scale(1.05); }
 
-    .photo.final {
-      width: 120px;
-      height: 150px;
-      position: relative;
-      transform: none;
-      top: auto;
-      left: auto;
-      margin: 5px;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
+.heart {
+  position: absolute; width: 15px; height: 15px;
+  background: url('heart.png') no-repeat center center;
+  background-size: contain;
+  opacity: 0; z-index: 5;
+}
 
-    .photo.final:hover {
-      transform: scale(1.05);
-    }
+.message {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.95);
+  padding: 20px; border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  opacity: 0; max-width: 80%; text-align: center;
+  font-size: 16px; line-height: 1.5;
+  transition: opacity 1s ease; z-index: 15;
+}
+.message.show { opacity: 1; }
 
-    .heart {
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      background: url('heart.png') no-repeat center center;
-      background-size: contain;
-      opacity: 0;
-      z-index: 5;
-    }
+.final-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(255,255,255,0.9); z-index: 25;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  opacity: 0; pointer-events: none; transition: opacity 2s ease;
+}
+.final-overlay.show { opacity: 1; pointer-events: auto; }
 
-    .message {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(255,255,255,0.95);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-      opacity: 0;
-      max-width: 80%;
-      text-align: center;
-      font-size: 16px;
-      line-height: 1.5;
-      transition: opacity 1s ease;
-      z-index: 15;
-    }
+.final-overlay h1 {
+  font-size: 28px; color: #e91e63; text-align: center;
+  animation: zoomIn 2s ease; margin-bottom: 30px;
+}
 
-    .message.show { opacity: 1; }
+.photos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 90%; margin: 0 auto; }
 
-    .final-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.9);
-      z-index: 25;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 2s ease;
-    }
+.photo-enlarged {
+  position: fixed; max-width: 90%; max-height: 90%;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  z-index: 40; border: 5px solid white; box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  opacity: 0; transition: opacity 0.5s ease;
+}
+.photo-enlarged.show { opacity: 1; }
 
-    .final-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
+@keyframes zoomIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity:1; } }
+@keyframes fly { 0% { transform: translate(0,0) scale(0.5); opacity:0; } 100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity:1; } }
+@keyframes heart-fall { 0% { transform: translateY(-50px) rotate(0deg); opacity:1; } 100% { transform: translateY(100vh) rotate(360deg); opacity:0; } }
 
-    .final-overlay h1 {
-      font-size: 28px;
-      color: #e91e63;
-      text-align: center;
-      animation: zoomIn 2s ease;
-      margin-bottom: 30px;
-    }
+.music-control {
+  position: fixed; bottom: 15px; right: 15px;
+  background: rgba(255,255,255,0.85); color:#333; padding:8px 15px;
+  border-radius:20px; cursor:pointer; font-size:13px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.15); z-index:20; display:none; border:none;
+}
+.music-control.show { display:block; }
 
-    .photos-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      max-width: 90%;
-      margin: 0 auto;
-    }
-
-    .photo-enlarged {
-      position: fixed;
-      max-width: 90%;
-      max-height: 90%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 40;
-      border: 5px solid white;
-      box-shadow: 0 0 30px rgba(0,0,0,0.5);
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    .photo-enlarged.show { opacity: 1; }
-
-    @keyframes zoomIn {
-      0% { transform: scale(0.5); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @keyframes fly {
-      0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
-      50% { opacity: 1; }
-      100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 1; }
-    }
-
-    @keyframes heart-fall {
-      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-    }
-
-    .music-control {
-      position: fixed;
-      bottom: 15px;
-      right: 15px;
-      background: rgba(255,255,255,0.85);
-      color: #333;
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 13px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      z-index: 20;
-      display: none;
-      border: none;
-    }
-
-    .music-control.show { display: block; }
-  </style>
+</style>
 </head>
 <body>
 
-  <div class="envelope" id="envelope"></div>
-  <div id="photosContainer"></div>
-  <div id="effectsContainer"></div>
-
-  <div class="message" id="message">
+<div class="envelope" id="envelope"></div>
+<div id="photosContainer"></div>
+<div id="effectsContainer"></div>
+<div class="message" id="message">
     <h2>Моя любимая!</h2>
     <p>Хочу, чтобы каждый твой день был наполнен радостью, теплом и улыбками. Ты делаешь мою жизнь ярче, а каждый момент рядом с тобой — особенным. Пусть этот день подарит тебе море цветов, нежности и самых приятных сюрпризов. Я ценю и люблю тебя за твою доброту, мудрость и ту магию, которую ты приносишь в мой мир.
 
@@ -205,116 +121,107 @@
     <h1>С любовью и самыми тёплыми пожеланиями!</h1>
     <div class="photos-grid" id="photosGrid"></div>
   </div>
+<div id="enlargedPhotoContainer"></div>
+<button class="music-control" id="musicControl">Выключить музыку</button>
+<audio id="bgMusic" loop><source src="music.mp3" type="audio/mp3"></audio>
 
-  <div id="enlargedPhotoContainer"></div>
-  <button class="music-control" id="musicControl">Выключить музыку</button>
-  <audio id="bgMusic" loop>
-    <source src="music.mp3" type="audio/mp3">
-  </audio>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const envelope = document.getElementById('envelope');
+  const photosContainer = document.getElementById('photosContainer');
+  const effectsContainer = document.getElementById('effectsContainer');
+  const message = document.getElementById('message');
+  const music = document.getElementById('bgMusic');
+  const musicControl = document.getElementById('musicControl');
+  const finalOverlay = document.getElementById('finalOverlay');
+  const photosGrid = document.getElementById('photosGrid');
+  const enlargedPhotoContainer = document.getElementById('enlargedPhotoContainer');
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const envelope = document.getElementById('envelope');
-      const photosContainer = document.getElementById('photosContainer');
-      const effectsContainer = document.getElementById('effectsContainer');
-      const message = document.getElementById('message');
-      const music = document.getElementById('bgMusic');
-      const musicControl = document.getElementById('musicControl');
-      const finalOverlay = document.getElementById('finalOverlay');
-      const photosGrid = document.getElementById('photosGrid');
-      const enlargedPhotoContainer = document.getElementById('enlargedPhotoContainer');
+  const photoCount = 8;
+  const allPhotos = [];
 
-      const photoCount = 8;
-      const allPhotos = [];
+  envelope.addEventListener('click', function() {
+    music.play().catch(() => {});
+    envelope.style.opacity = '0';
+    envelope.style.pointerEvents = 'none';
+    message.classList.add('show');
+    musicControl.classList.add('show');
+    music.volume = 0.5;
 
-      envelope.addEventListener('click', function() {
-        music.play().catch(() => {}); // проигрываем музыку
-        envelope.style.opacity = '0';
-        envelope.style.pointerEvents = 'none';
-        message.classList.add('show');
-        musicControl.classList.add('show');
-        music.volume = 0.5;
+    // Фото появляются постепенно
+    for (let i=1; i<=photoCount; i++) {
+      const photo = document.createElement('div');
+      photo.className='photo';
+      photo.style.backgroundImage=`url('photo${i}.jpg')`;
+      photo.dataset.src=`photo${i}.jpg`;
 
-        // Появление фото
-        for (let i = 1; i <= photoCount; i++) {
-          const photo = document.createElement('div');
-          photo.className = 'photo';
-          photo.style.backgroundImage = `url('photo${i}.jpg')`;
-          photo.dataset.src = `photo${i}.jpg`;
+      const angle = i*(2*Math.PI/photoCount);
+      const distance = 200;
+      photo.style.setProperty('--tx', `${Math.cos(angle)*distance}px`);
+      photo.style.setProperty('--ty', `${Math.sin(angle)*distance}px`);
+      photo.style.left='50%'; photo.style.top='50%';
+      photosContainer.appendChild(photo);
+      allPhotos.push(photo);
 
-          const angle = i * (2 * Math.PI / photoCount);
-          const distance = 200;
-          photo.style.setProperty('--tx', `${Math.cos(angle)*distance}px`);
-          photo.style.setProperty('--ty', `${Math.sin(angle)*distance}px`);
-          photo.style.left = '50%';
-          photo.style.top = '50%';
-          photosContainer.appendChild(photo);
-          allPhotos.push(photo);
+      setTimeout(()=> {
+        photo.style.opacity='1';
+        photo.style.animation='fly 1s ease-out forwards';
+      }, i*350); // <-- плавнее
+    }
 
-          setTimeout(() => {
-            photo.style.opacity = '1';
-            photo.style.animation = 'fly 1s ease-out forwards';
-          }, i * 150);
-        }
+    // Сердечки падают постепенно
+    setTimeout(()=> createHearts(50), 1000);
 
-        // Сердечки вместо конфетти
-        setTimeout(() => createHearts(50), 800);
+    // Финальный экран через 5 сек
+    setTimeout(()=> prepareFinalView(), 5000);
+  });
 
-        // Финальный экран через 3 сек
-        setTimeout(() => prepareFinalView(), 3000);
-      });
+  function prepareFinalView() {
+    message.classList.remove('show');
+    finalOverlay.classList.add('show');
 
-      function prepareFinalView() {
-        message.classList.remove('show');
-        finalOverlay.classList.add('show');
-
-        allPhotos.forEach(photo => {
-          const photoClone = photo.cloneNode();
-          photoClone.className = 'photo final';
-          photoClone.style.opacity = '1';
-          photoClone.addEventListener('click', () => showEnlargedPhoto(photo.dataset.src));
-          photosGrid.appendChild(photoClone);
-        });
-
-        createHearts(30);
-      }
-
-      function showEnlargedPhoto(src) {
-        enlargedPhotoContainer.innerHTML = '';
-        const enlargedPhoto = document.createElement('img');
-        enlargedPhoto.className = 'photo-enlarged';
-        enlargedPhoto.src = src;
-        enlargedPhotoContainer.appendChild(enlargedPhoto);
-        setTimeout(() => enlargedPhoto.classList.add('show'), 10);
-        enlargedPhoto.addEventListener('click', () => {
-          enlargedPhoto.classList.remove('show');
-          setTimeout(() => enlargedPhoto.remove(), 500);
-        });
-      }
-
-      function createHearts(count) {
-        for (let i = 0; i < count; i++) {
-          setTimeout(() => {
-            const heart = document.createElement('div');
-            heart.className = 'heart';
-            heart.style.left = `${Math.random()*100}vw`;
-            heart.style.animation = `heart-fall ${3+Math.random()*2}s linear forwards`;
-            effectsContainer.appendChild(heart);
-            setTimeout(() => heart.remove(), 5000);
-          }, i*100);
-        }
-      }
-
-      musicControl.addEventListener('click', function() {
-        if (music.paused) {
-          music.play();
-          musicControl.textContent = 'Выключить музыку';
-        } else {
-          music.pause();
-          musicControl.textContent = 'Включить музыку';
-        }
-      });
+    allPhotos.forEach(photo=>{
+      const clone=photo.cloneNode();
+      clone.className='photo final';
+      clone.style.opacity='1';
+      clone.addEventListener('click',()=>showEnlargedPhoto(photo.dataset.src));
+      photosGrid.appendChild(clone);
     });
-  </script>
+
+    createHearts(30);
+  }
+
+  function showEnlargedPhoto(src) {
+    enlargedPhotoContainer.innerHTML='';
+    const enlargedPhoto = document.createElement('img');
+    enlargedPhoto.className='photo-enlarged';
+    enlargedPhoto.src=src;
+    enlargedPhotoContainer.appendChild(enlargedPhoto);
+    setTimeout(()=> enlargedPhoto.classList.add('show'),10);
+    enlargedPhoto.addEventListener('click',()=>{
+      enlargedPhoto.classList.remove('show');
+      setTimeout(()=> enlargedPhoto.remove(),500);
+    });
+  }
+
+  function createHearts(count){
+    for(let i=0;i<count;i++){
+      setTimeout(()=>{
+        const heart=document.createElement('div');
+        heart.className='heart';
+        heart.style.left=`${Math.random()*100}vw`;
+        heart.style.animation=`heart-fall ${3+Math.random()*2}s linear forwards`;
+        effectsContainer.appendChild(heart);
+        setTimeout(()=>heart.remove(),5000);
+      }, i*200); // <-- плавнее
+    }
+  }
+
+  musicControl.addEventListener('click', function() {
+    if(music.paused){ music.play(); musicControl.textContent='Выключить музыку'; }
+    else { music.pause(); musicControl.textContent='Включить музыку'; }
+  });
+});
+</script>
 </body>
 </html>
