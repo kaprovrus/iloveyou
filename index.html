@@ -80,9 +80,9 @@ body{
   position:absolute;
   top:50%;
   left:50%;
-  transform:translate(-50%,-50%);
+  transform:translate(-50%, -50%);
   display:flex;
-  gap:10px;
+  gap:5px;
   opacity:0;
   transition:all 1.2s ease;
   z-index:1;
@@ -90,17 +90,17 @@ body{
 }
 
 .photos img{
-  width:75px;
-  height:95px;
+  width:70px;
+  height:90px;
   object-fit:cover;
   border-radius:12px;
   box-shadow:0 10px 20px rgba(0,0,0,0.25);
   opacity:0;
-  transform:translateY(0) rotate(0deg) scale(0.5);
+  transform:translateY(0) scale(0.5);
   transition:all 1.2s ease;
 }
 
-/* Добавляем разные задержки для каждого фото */
+/* Задержки для каждого фото */
 .photos img:nth-child(1){ transition-delay:0.1s; }
 .photos img:nth-child(2){ transition-delay:0.2s; }
 .photos img:nth-child(3){ transition-delay:0.3s; }
@@ -112,14 +112,15 @@ body{
 
 .open .photos{
   opacity:1;
-  transform:translate(-50%,-160px);
+  transform:translate(-50%, -180px);
 }
 
 .open .photos img{
   opacity:1;
-  transform:translateY(80px) rotate(var(--rotate)) scale(1);
+  transform:translateY(100px) rotate(var(--rotate)) scale(1);
 }
 
+/* Разные углы поворота для фото */
 .open .photos img:nth-child(1){ --rotate: -35deg; }
 .open .photos img:nth-child(2){ --rotate: -25deg; }
 .open .photos img:nth-child(3){ --rotate: -15deg; }
@@ -143,29 +144,28 @@ body{
   100%{transform:translateY(110vh) rotate(360deg); opacity:0.9;}
 }
 
-/* Заглушки для фото если нет реальных изображений */
-.photos img:not([src*="."]), 
-.photos img[src=""]{
+/* Заглушки для фото если файлы не найдены */
+.photos img {
   background: linear-gradient(135deg, #ff9a9e, #fad0c4);
   border: 2px solid white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ff4d6d;
-  font-weight: bold;
-  font-size: 24px;
+  display: inline-block;
+  position: relative;
 }
 
-.photos img:not([src*="."])::after, 
-.photos img[src=""]::after{
-  content: "🌸";
+.photos img[src=""], 
+.photos img:not([src]) {
+  content: "";
+}
+
+.photos img::after {
+  display: none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 УКАЖИ ЗДЕСЬ ПУТЬ К СВОЕЙ МУЗЫКЕ -->
+<!-- 🎵 Музыка -->
 <audio id="bgMusic" src="music.mp3" loop></audio>
 
 <div class="scene">
@@ -175,20 +175,22 @@ body{
   </div>
 
   <div class="photos">
-      <img src="photo1.jpg" alt="Фото 1" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23ff9a9e%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ffffff%22%3E🌸%3C%2Ftext%3E%3C%2Fsvg%3E'">
-      <img src="photo2.jpg" alt="Фото 2" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23fecfef%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ff4d6d%22%3E❤️%3C%2Ftext%3E%3C%2Fsvg%3E'">
-      <img src="photo3.jpg" alt="Фото 3" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23ffb6c1%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ffffff%22%3E🌹%3C%2Ftext%3E%3C%2Fsvg%3E'">
-      <img src="photo4.jpg" alt="Фото 4" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23ffc0cb%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ff4d6d%22%3E🌷%3C%2Ftext%3E%3C%2Fsvg%3E'">
-      <img src="photo5.jpg" alt="Фото 5" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23ffe4e1%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ff4d6d%22%3E🌺%3C%2Ftext%3E%3C%2Fsvg%3E'">
-      <img src="photo6.jpg" alt="Фото 6" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23fff0f5%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ff4d6d%22%3E🌼%3C%2Ftext%3E%3C%2Fsvg%3E'">
-      <img src="photo7.jpg" alt="Фото 7" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23fadadd%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ffffff%22%3E🌸%3C%2Ftext%3E%3C%2Fsvg%3E'">
-      <img src="photo8.jpg" alt="Фото 8" onerror="this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2275%22%20height%3D%2295%22%20viewBox%3D%220%200%2075%2095%22%3E%3Crect%20width%3D%2275%22%20height%3D%2295%22%20fill%3D%22%23ffe4e1%22%2F%3E%3Ctext%20x%3D%2215%22%20y%3D%2255%22%20font-size%3D%2230%22%20fill%3D%22%23ff4d6d%22%3E❤️%3C%2Ftext%3E%3C%2Fsvg%3E'">
+      <!-- Временные цветные заглушки, пока нет реальных фото -->
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23ff9a9e'/%3E%3Ctext x='15' y='55' font-size='30' fill='white'%3E🌸%3C/text%3E%3C/svg%3E">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23fecfef'/%3E%3Ctext x='15' y='55' font-size='30' fill='%23ff4d6d'%3E❤️%3C/text%3E%3C/svg%3E">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23ffb6c1'/%3E%3Ctext x='15' y='55' font-size='30' fill='white'%3E🌹%3C/text%3E%3C/svg%3E">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23ffc0cb'/%3E%3Ctext x='15' y='55' font-size='30' fill='%23ff4d6d'%3E🌷%3C/text%3E%3C/svg%3E">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23ffe4e1'/%3E%3Ctext x='15' y='55' font-size='30' fill='%23ff4d6d'%3E🌺%3C/text%3E%3C/svg%3E">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23fff0f5'/%3E%3Ctext x='15' y='55' font-size='30' fill='%23ff4d6d'%3E🌼%3C/text%3E%3C/svg%3E">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23fadadd'/%3E%3Ctext x='15' y='55' font-size='30' fill='white'%3E🌸%3C/text%3E%3C/svg%3E">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='90' viewBox='0 0 70 90'%3E%3Crect width='70' height='90' fill='%23ffe4e1'/%3E%3Ctext x='15' y='55' font-size='30' fill='%23ff4d6d'%3E❤️%3C/text%3E%3C/svg%3E">
   </div>
 </div>
 
 <script>
 const envelope = document.getElementById("envelope");
 const music = document.getElementById("bgMusic");
+const photos = document.querySelector('.photos');
 
 let confettiStarted = false;
 
@@ -206,13 +208,20 @@ envelope.addEventListener("click", ()=>{
       setInterval(createHeart, 150);
       confettiStarted = true;
     }
+
+    // Добавляем класс для анимации фото
+    photos.classList.add('show');
   }
 });
 
 function createHeart(){
   const heart = document.createElement("div");
   heart.className = "heart";
-  heart.innerHTML = ["❤️","🧡","💛","💚","💙","💜","🌸","🌺"][Math.floor(Math.random()*8)];
+  
+  // Разные символы для разнообразия
+  const symbols = ["❤️","🧡","💛","💚","💙","💜","🌸","🌺","🌷","🌹"];
+  heart.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+  
   heart.style.left = Math.random()*100 + "vw";
   heart.style.animationDuration = (Math.random()*3+2) + "s";
   heart.style.fontSize = (Math.random()*15+15) + "px";
@@ -220,6 +229,9 @@ function createHeart(){
 
   setTimeout(()=>heart.remove(), 5000);
 }
+
+// Для проверки в консоли
+console.log("Скрипт загружен. Нажми на конверт!");
 </script>
 
 </body>
